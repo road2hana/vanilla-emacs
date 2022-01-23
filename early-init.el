@@ -21,6 +21,10 @@
 ;; font. By inhibiting this, we easily halve startup times with fonts that are
 ;; larger than the system default.
 (setq frame-inhibit-implied-resize t)
+;; start the initial frame maximized
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+;; start every frame maximized
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ;; Disable GUI elements
 (menu-bar-mode -1)

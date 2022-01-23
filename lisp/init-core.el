@@ -1190,112 +1190,19 @@ asynchronously."
 )
 
 (use-package modus-themes
-  :straight (modus-themes :type git :host gitlab :repo "protesilaos/modus-themes" :branch "main")
-  :demand
-  :if (display-graphic-p)
-  :hook (modus-themes-after-load-theme . lc/fix-fill-column-indicator)
-  :general
-  (lc/leader-keys
-    "t t" '((lambda () (interactive) (modus-themes-toggle)) :wk "toggle theme"))
+  :ensure                         ; omit this to use the built-in themes
   :init
-  (setq modus-themes-slanted-constructs t
-        ;; modus-themes-no-mixed-fonts t
-        modus-themes-bold-constructs t
-        modus-themes-fringes 'nil ; {nil,'subtle,'intense}
-        modus-themes-mode-line '3d ; {nil,'3d,'moody}
-        modus-themes-intense-hl-line nil
-        modus-themes-mixed-fonts t
-        modus-themes-prompts nil ; {nil,'subtle,'intense}
-        modus-themes-completions 'moderate ; {nil,'moderate,'opinionated}
-        modus-themes-diffs nil ; {nil,'desaturated,'fg-only}
-        modus-themes-org-blocks 'greyscale ; {nil,'greyscale,'rainbow}
-        modus-themes-headings  ; Read further below in the manual for this one
-        '((1 . line-no-bold)
-          (t . rainbow-line-no-bold))
-        modus-themes-variable-pitch-headings t
-        modus-themes-scale-headings t
-        modus-themes-scale-1 1.1
-        modus-themes-scale-2 1.15
-        modus-themes-scale-3 1.21
-        modus-themes-scale-4 1.27
-        modus-themes-scale-5 1.33)	
-  (defun lc/override-colors ()
-    (setq modus-themes-operandi-color-overrides
-          '((bg-main . "#fefcf4")
-            (bg-dim . "#faf6ef")
-            (bg-alt . "#f7efe5")
-            (bg-hl-line . "#f4f0e3")
-            (bg-active . "#e8dfd1")
-            (bg-inactive . "#f6ece5")
-            (bg-region . "#c6bab1")
-            (bg-header . "#ede3e0")
-            (bg-tab-bar . "#dcd3d3")
-            (bg-tab-active . "#fdf6eb")
-            (bg-tab-inactive . "#c8bab8")
-            (fg-unfocused ."#55556f")))
-    (setq modus-themes-vivendi-color-overrides
-          '((bg-main . "#100b17")
-            (bg-dim . "#161129")
-            (bg-alt . "#181732")
-            (bg-hl-line . "#191628")
-            (bg-active . "#282e46")
-            (bg-inactive . "#1a1e39")
-            (bg-region . "#393a53")
-            (bg-header . "#202037")
-            (bg-tab-bar . "#262b41")
-            (bg-tab-active . "#120f18")
-            (bg-tab-inactive . "#3a3a5a")
-            (fg-unfocused . "#9a9aab")))
-    )
-  (defun lc/load-dark-theme ()
-    (setq lc/theme 'dark)
-    ;; (with-eval-after-load 'org (plist-put org-format-latex-options :foreground "whitesmoke"))
-    (with-eval-after-load 'org (plist-put org-format-latex-options :background "Transparent"))
-    (with-eval-after-load 'org-html-themify
-      (setq org-html-themify-themes '((light . modus-vivendi) (dark . modus-vivendi))))
-    (modus-themes-load-vivendi)
-    (lc/update-centaur-tabs))
-  (defun lc/load-light-theme ()
-    (setq lc/theme 'light)
-    ;; (with-eval-after-load 'org (plist-put org-format-latex-options :foreground "dark"))
-    (with-eval-after-load 'org (plist-put org-format-latex-options :background  "Transparent"))
-    (with-eval-after-load 'org-html-themify
-      (setq org-html-themify-themes '((light . modus-operandi) (dark . modus-operandi))))
-    (setenv "BAT_THEME" "ansi")
-    (modus-themes-load-operandi)
-    (lc/update-centaur-tabs))
-  (defun lc/update-centaur-tabs ()
-    (centaur-tabs-display-update)
-    (centaur-tabs-headline-match)
-    (set-face-attribute 'centaur-tabs-selected nil :overline (face-background 'centaur-tabs-active-bar-face)))
-    (defun lc/change-theme-with-mac-system ()
-      (let ((appearance (plist-get (mac-application-state) :appearance)))
-        (cond ((equal appearance "NSAppearanceNameAqua")
-               (lc/load-light-theme))
-              ((equal appearance "NSAppearanceNameDarkAqua")
-               (lc/load-dark-theme)))))
-    (defun lc/change-theme-with-timers ()
-      (run-at-time "00:00" (* 60 60 24) 'lc/load-dark-theme)
-      (run-at-time "08:00" (* 60 60 24) 'lc/load-light-theme)
-      (run-at-time "18:00" (* 60 60 24) 'lc/load-dark-theme))
-    (defun lc/fix-fill-column-indicator ()
-      (when (display-graphic-p)
-        (modus-themes-with-colors
-          (custom-set-faces
-           `(fill-column-indicator ((,class :background ,bg-inactive :foreground ,bg-inactive)))))))
-    :config
-    (when (display-graphic-p)
-      (lc/override-colors))
-    (if (and (boundp 'mac-effective-appearance-change-hook)
-             (plist-get (mac-application-state) :appearance))
-        (progn
-          (add-hook 'after-init-hook 'lc/change-theme-with-mac-system)
-          (add-hook 'mac-effective-appearance-change-hook 'lc/change-theme-with-mac-system))
-      ;; (add-hook 'after-init-hook 'lc/change-theme-with-timers)
-      ;; (add-hook 'emacs-startup-hook 'lc/load-light-theme)
-      (add-hook 'emacs-startup-hook 'lc/change-theme-with-timers)
-      )
-    )
+  ;; Add all your customizations prior to loading the themes
+  (setq modus-themes-italic-constructs t
+        modus-themes-bold-constructs nil
+        modus-themes-region '(bg-only no-extend))
+
+  ;; Load the theme files before enabling a theme (else you get an error).
+  (modus-themes-load-themes)
+  :config
+  ;; Load the theme of your choice:
+  (modus-themes-load-operandi) ;; OR (modus-themes-load-vivendi)
+  :bind ("<f5>" . modus-themes-toggle))
 
 (use-package dashboard
   :demand

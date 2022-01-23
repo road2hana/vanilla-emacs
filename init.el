@@ -41,13 +41,15 @@
   ;; (require 'init-prog-jupyter)
   (require 'init-prog-elisp)
   (require 'init-prog-markdown)
-  ;; (require 'init-prog-r)
+   (require 'init-prog-r)
   ;; (require 'init-prog-clojure)
   (require 'init-prog-tree-sitter)
   ;; (require 'init-extra-focus)
   (require 'init-extra-web)
   ;; (require 'init-extra-rss)
   ;; (require 'init-extra)
+	(require 'init-academic-research)
+	(require 'init-prog-julia)
   )
 
 ;;; init.el ends here

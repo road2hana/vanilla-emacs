@@ -45,9 +45,23 @@
 (use-package lsp-pyright
   :init
   (setq lsp-pyright-typechecking-mode "basic") ;; too much noise in "real" projects
+	;; these hooks can't go in the :hook section since lsp-restart-workspace
+  ;; is not available if lsp isn't active
+  (add-hook 'conda-postactivate-hook (lambda () (lsp-restart-workspace)))
+  (add-hook 'conda-postdeactivate-hook (lambda () (lsp-restart-workspace)))
   :hook (python-mode . (lambda ()
                          (require 'lsp-pyright)
                          (lsp-deferred))))
+
+(use-package conda
+  :straight t
+  :defer t
+  :init
+  (setq conda-anaconda-home (expand-file-name "/opt/homebrew/Caskroom/miniforge/base"))
+  (setq conda-env-home-directory (expand-file-name "~/labs/ds_demo/env"))
+  :config
+  (conda-env-initialize-interactive-shells)
+  (conda-env-initialize-eshell))
 
 (use-package python-pytest
   :general

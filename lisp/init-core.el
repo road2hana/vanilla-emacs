@@ -1123,7 +1123,8 @@ asynchronously."
   (epa-file-enable)
   (org-crypt-use-before-save-magic)
   (setq org-tags-exclude-from-inheritance (quote ("crypt")))
-  (setq org-crypt-key nil)
+  (setq org-crypt-key "Alan Zhang")
+	(setenv "GPG_AGENT_INFO" nil)
   (defun ag/reveal-and-move-back ()
     (org-reveal)
     (goto-char ag/old-point))
@@ -1188,7 +1189,6 @@ asynchronously."
     (doom-modeline-mode 1)
     (set-face-attribute 'doom-modeline-evil-insert-state nil :foreground "orange")
 )
-
 (use-package modus-themes
   :ensure                         ; omit this to use the built-in themes
   :init
@@ -1199,10 +1199,9 @@ asynchronously."
 
   ;; Load the theme files before enabling a theme (else you get an error).
   (modus-themes-load-themes)
-  :config
-  ;; Load the theme of your choice:
-  (modus-themes-load-operandi) ;; OR (modus-themes-load-vivendi)
-  :bind ("<f5>" . modus-themes-toggle))
+	:config
+	(modus-themes-load-vivendi))
+
 
 (use-package dashboard
   :demand
